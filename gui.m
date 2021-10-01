@@ -130,8 +130,8 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     end
     
     h_n(M/2) = 1;
-    soma = 0;
     janelado = h_n.*janela;
+    soma = 0;
     
     for i = n
         if i ~= M/2
