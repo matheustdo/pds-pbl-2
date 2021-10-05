@@ -134,19 +134,37 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     end
 
     janelado = h_n.*janela;
-%     soma = 0;
-%     
-%     for i = n
-%         if i ~= M/2
-%             soma = soma + janelado(i);
+    
+    stem(handles.axes1, n, janelado);
+    
+    f = fs;
+    y=fft(janelado); grid on;
+    yaux=fliplr(y(1,2:end));
+    X=[yaux y];
+    X(1,1:length(X)/4)=0;
+    X(1,3*length(X)/4:end)=0;
+    omega=0:f/length(y):f-(f/length(y));
+    waux=-fliplr(omega(1,2:end));
+    w=[waux omega];
+    plot(handles.axes2,w,abs(2*X/length(n)));
+    xlabel('$f$(Hz)','interpreter','latex');
+    ylabel('Magnitude');
+    
+%     Omega = -pi:pi/100:6*pi;
+%     for nn = 1:1:length(n)
+%         for O= 1:1:length(Omega)
+%             XOmega(nn,O)=janelado(nn)*exp(-j*Omega(O)*n(nn));
 %         end
 %     end
-%     
-%     K = 1/soma;
+%     for W=1:1:length(Omega)
+%         XOMEGA(W)=sum(XOmega(:,W));
+%     end
+%     plot(handles.axes3,W,XOMEGA);
     
-    resultado = janelado;
-    stem(handles.axes1, n, janelado);
-    stem(handles.axes2, n, h_n);
+    
+  
+    
+    
     
 % hObject    handle to pushbuttonExecutar (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
