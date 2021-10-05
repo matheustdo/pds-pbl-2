@@ -76,7 +76,7 @@ varargout{1} = handles.output;
 % --- Executes on button press in pushbuttonExecutar.
 function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     fs = str2double(handles.editFreqAmostragem.String);
-    fc = str2double(handles.editFreqPassagem.String)/fs;
+    fc = str2double(handles.editFreqPassagem.String)/fs; 
     banda_transicao = str2double(handles.editLarguraTransicao.String);
     BW = banda_transicao/fs;
     M = 4/BW;
@@ -87,12 +87,14 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
         h_n = sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2)));    
         h_n(M/2) = 2*fc;
     elseif handles.passaAlta.Value == 1
-        h_n = - sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2)));
-        h_n(M/2) = (1 - 2*fc);
+        h_n = (sin(pi*fc.*(n-(M/2)))./(pi*(n-(M/2)))) - (sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2))));
+        h_n(M/2) = 1;
     elseif handles.passaFaixa.Value == 1
         % code
+        h_n(M/2) = 1;
     elseif handles.rejeitaFaixa.Value == 1
         % code
+        h_n(M/2) = 1;
     end
     
     janela = zeros(1); % Inicializa a janela
@@ -104,15 +106,17 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
         n = 1:M;
         
         if handles.passaBaixa.Value == 1
-            h_n = sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2)));    
-            h_n(M/2) = 2*fc;
+            h_n = sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2)));
+            h_n(M/2) = 1;
         elseif handles.passaAlta.Value == 1
-            h_n = - sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2)));
-            h_n(M/2) = (1 - 2*fc);
+            h_n = (sin(pi*fc.*(n-(M/2)))./(pi*(n-(M/2)))) - (sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2))));
+            h_n(M/2) = 1;
         elseif handles.passaFaixa.Value == 1
             % code
+            h_n(M/2) = 1;
         elseif handles.rejeitaFaixa.Value == 1
             % code
+            h_n(M/2) = 1;
         end
     
         if rem(M, 2) == 0
@@ -122,6 +126,7 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
             
             for i=M+1/2:M
                 janela = 2 - 2*i/M;
+                disp(i)
             end
         end
     elseif handles.hamming.Value == 1
@@ -133,19 +138,18 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     end
 
     janelado = h_n.*janela;
-%     soma = 0;
-%     
-%     for i = n
-%         if i ~= M/2
-%             soma = soma + janelado(i);
-%         end
-%     end
-%     
-%     K = 1/soma;
+    soma = 0;
     
-    resultado = janelado;
-    stem(handles.axes1, n, janelado);
-    stem(handles.axes2, n, h_n);
+    for i = n
+        if i ~= M/2
+            soma = soma + janelado(i);
+        end
+    end
+    
+    K = 1/soma;
+    
+    resultado = K*janelado;
+    stem(handles.axes1, n, resultado);
     
 % hObject    handle to pushbuttonExecutar (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
