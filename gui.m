@@ -80,15 +80,16 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     banda_transicao = str2double(handles.editLarguraTransicao.String);
     BW = banda_transicao/fs;
     M = 4/BW;
+    centro = floor(M/2);
     n = 1:M;
     h_n = zeros(1); % Inicializa o h[n]
     
     if handles.passaBaixa.Value == 1
         h_n = sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2)));    
-        h_n(M/2) = 2*fc;
+        h_n(centro) = 2*fc;
     elseif handles.passaAlta.Value == 1
         h_n = - sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2)));
-        h_n(M/2) = (1 - 2*fc);
+        h_n(centro) = (1 - 2*fc);
     elseif handles.passaFaixa.Value == 1
         % code
     elseif handles.rejeitaFaixa.Value == 1
