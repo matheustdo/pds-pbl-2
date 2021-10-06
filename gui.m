@@ -61,7 +61,6 @@ guidata(hObject, handles);
 % UIWAIT makes gui wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
-
 % --- Outputs from this function are returned to the command line.
 function varargout = gui_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
@@ -135,19 +134,7 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
         janela = 0.42 - 0.5.*cos(2*pi.*n/M) + 0.08.*cos(4*pi.*n/M);
     end
     
-    plot(handles.axes4, n, janela);
-    
     f = fs;
-    y=fft(janela); grid on;
-    yaux=fliplr(y(1,2:end));
-    X=[yaux y];
-    X(1,1:length(X)/4)=0;
-    X(1,3*length(X)/4:end)=0;
-    omega=0:f/length(y):f-(f/length(y));
-    waux=-fliplr(omega(1,2:end));
-    w=[waux omega];
-    plot(handles.axes5,w,abs(2*X/length(n)));
-    
     janelado = h_n.*janela;
     
     stem(handles.axes1, n, janelado);
@@ -163,6 +150,13 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     plot(handles.axes2,w,abs(2*X/length(n)));
     xlabel('$f$(Hz)','interpreter','latex');
     ylabel('Magnitude');
+    
+    persistent wvfigh; % Inicializa uma variável persistente
+    delete(wvfigh); % Deleta o wvtool anterior se ele for existente
+    wvfigh = wvtool(janela); % Cria a janela com o wvtool
+    set(wvfigh, 'Visible', 'off'); % Tira a visibilidade da janela do wvtool
+    wvfigax = findall(wvfigh, 'type', 'axes'); % Pega os axes do wvtool
+    set(wvfigax, 'Parent', handles.uipanel3); % Coloca os axes do wvtool no nosso painel
     
 %     Omega = -pi:pi/100:6*pi;
 %     for nn = 1:1:length(n)
