@@ -99,7 +99,9 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     janela = zeros(1); % Inicializa a janela
     
     if handles.retangular.Value == 1
-        janela = 1;
+        for i=1:M
+            janela(i) = 1;
+        end
     elseif handles.bartlett.Value == 1
         M = str2double(handles.editLarguraTransicao.String);
         n = 1:M;
@@ -117,12 +119,12 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
         end
     
         if rem(M, 2) == 0
-            for i=1:M/2
-                janela = 2*i/M;
+            for i=1:(M/2)
+                janela(floor(i)) = 2*i/M;
             end
             
-            for i=M+1/2:M
-                janela = 2 - 2*i/M;
+            for i=((M+1)/2):M
+                janela(round(i)) = 2 - 2*i/M;
             end
         end
     elseif handles.hamming.Value == 1
@@ -132,12 +134,24 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     elseif handles.blackman.Value == 1
         janela = 0.42 - 0.5.*cos(2*pi.*n/M) + 0.08.*cos(4*pi.*n/M);
     end
-
+    
+    plot(handles.axes4, n, janela);
+    
+    f = fs;
+    y=fft(janela); grid on;
+    yaux=fliplr(y(1,2:end));
+    X=[yaux y];
+    X(1,1:length(X)/4)=0;
+    X(1,3*length(X)/4:end)=0;
+    omega=0:f/length(y):f-(f/length(y));
+    waux=-fliplr(omega(1,2:end));
+    w=[waux omega];
+    plot(handles.axes5,w,abs(2*X/length(n)));
+    
     janelado = h_n.*janela;
     
     stem(handles.axes1, n, janelado);
     
-    f = fs;
     y=fft(janelado); grid on;
     yaux=fliplr(y(1,2:end));
     X=[yaux y];
