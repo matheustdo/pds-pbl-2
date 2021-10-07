@@ -90,9 +90,13 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
         h_n = - sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2)));
         h_n(centro) = (1 - 2*fc);
     elseif handles.passaFaixa.Value == 1
-        % code
+        fc2 = (str2double(handles.editFreqPassagem.String)+1000)/fs;
+        h_n = (sin(2*pi*fc2.*(n-(M/2))) - sin(2*pi*fc.*(n-(M/2))))./(pi*(n-(M/2)));
+        h_n(centro) = (2*fc2 - 2*fc);
     elseif handles.rejeitaFaixa.Value == 1
-        % code
+        fc2 = (str2double(handles.editFreqPassagem.String)+1000)/fs;
+        h_n = (sin(2*pi*fc.*(n-(M/2))) - sin(2*pi*fc2.*(n-(M/2))))./(pi*(n-(M/2)));
+        h_n(centro) = 1-(2*fc2 - 2*fc);
     end
     
     janela = zeros(1); % Inicializa a janela
