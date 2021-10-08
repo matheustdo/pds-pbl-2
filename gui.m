@@ -22,7 +22,7 @@ function varargout = gui(varargin)
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 01-Oct-2021 12:06:54
+% Last Modified by GUIDE v2.5 07-Oct-2021 22:47:03
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -90,11 +90,11 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
         h_n = - sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2)));
         h_n(centro) = (1 - 2*fc);
     elseif handles.passaFaixa.Value == 1
-        fc2 = (str2double(handles.editFreqPassagem.String)+1000)/fs;
+        fc2 = (str2double(handles.editFreqCorteSup.String))/fs;
         h_n = (sin(2*pi*fc2.*(n-(M/2))) - sin(2*pi*fc.*(n-(M/2))))./(pi*(n-(M/2)));
         h_n(centro) = (2*fc2 - 2*fc);
     elseif handles.rejeitaFaixa.Value == 1
-        fc2 = (str2double(handles.editFreqPassagem.String)+1000)/fs;
+        fc2 = (str2double(handles.editFreqCorteSup.String))/fs;
         h_n = (sin(2*pi*fc.*(n-(M/2))) - sin(2*pi*fc2.*(n-(M/2))))./(pi*(n-(M/2)));
         h_n(centro) = 1-(2*fc2 - 2*fc);
     end
@@ -116,9 +116,13 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
             h_n = - sin(2*pi*fc.*(n-(M/2)))./(pi*(n-(M/2)));
             h_n(M/2) = (1 - 2*fc);
         elseif handles.passaFaixa.Value == 1
-            % code
+            fc2 = (str2double(handles.editFreqCorteSup.String))/fs;
+            h_n = (sin(2*pi*fc2.*(n-(M/2))) - sin(2*pi*fc.*(n-(M/2))))./(pi*(n-(M/2)));
+            h_n(M/2) = (2*fc2 - 2*fc);
         elseif handles.rejeitaFaixa.Value == 1
-            % code
+            fc2 = (str2double(handles.editFreqCorteSup.String))/fs;
+            h_n = (sin(2*pi*fc.*(n-(M/2))) - sin(2*pi*fc2.*(n-(M/2))))./(pi*(n-(M/2)));
+            h_n(M/2) = 1-(2*fc2 - 2*fc);
         end
     
         if rem(M, 2) == 0
@@ -300,3 +304,91 @@ function blackman_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of blackman
+
+
+% --- Executes on key press with focus on blackman and none of its controls.
+function blackman_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to blackman (see GCBO)
+% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+function editFreqCorteSup_Callback(hObject, eventdata, handles)
+% hObject    handle to editFreqCorteSup (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of editFreqCorteSup as text
+%        str2double(get(hObject,'String')) returns contents of editFreqCorteSup as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function editFreqCorteSup_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editFreqCorteSup (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in passaBaixa.
+function passaBaixa_Callback(hObject, eventdata, handles)
+% hObject    handle to passaBaixa (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.text2.String = 'Frequência de passagem (Hz)';
+handles.editFreqCorteSup.Enable = 'off';
+handles.editFreqCorteSup.Visible = 'Off';
+handles.text11.Enable = 'off';
+handles.text11.Visible = 'Off';
+
+
+% Hint: get(hObject,'Value') returns toggle state of passaBaixa
+
+
+% --- Executes on button press in passaAlta.
+function passaAlta_Callback(hObject, eventdata, handles)
+% hObject    handle to passaAlta (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.text2.String = 'Frequência de passagem (Hz)';
+handles.editFreqCorteSup.Enable = 'off';
+handles.editFreqCorteSup.Visible = 'Off';
+handles.text11.Enable = 'off';
+handles.text11.Visible = 'Off';
+
+% Hint: get(hObject,'Value') returns toggle state of passaAlta
+
+
+% --- Executes on button press in passaFaixa.
+function passaFaixa_Callback(hObject, eventdata, handles)
+% hObject    handle to passaFaixa (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.text2.String = 'Frequência de corte inferior (Hz)';
+handles.editFreqCorteSup.Enable = 'on';
+handles.editFreqCorteSup.Visible = 'On';
+handles.text11.Enable = 'on';
+handles.text11.Visible = 'On';
+% Hint: get(hObject,'Value') returns toggle state of passaFaixa
+
+
+% --- Executes on button press in rejeitaFaixa.
+function rejeitaFaixa_Callback(hObject, eventdata, handles)
+% hObject    handle to rejeitaFaixa (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.text2.String = 'Frequência de corte inferior (Hz)';
+handles.editFreqCorteSup.Enable = 'on';
+handles.editFreqCorteSup.Visible = 'On';
+handles.text11.Enable = 'on';
+handles.text11.Visible = 'On';
+% Hint: get(hObject,'Value') returns toggle state of rejeitaFaixa
