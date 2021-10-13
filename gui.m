@@ -142,22 +142,24 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
         janela = 0.42 - 0.5.*cos(2*pi.*n/M) + 0.08.*cos(4*pi.*n/M);
     end
     
-    f = fs;
     janelado = h_n.*janela;
     
     stem(handles.axes1, n, janelado);
     
-    y=fft(janelado); grid on;
-    yaux=fliplr(y(1,2:end));
-    X=[yaux y];
-    X(1,1:length(X)/4)=0;
-    X(1,3*length(X)/4:end)=0;
-    omega=0:f/length(y):f-(f/length(y));
-    waux=-fliplr(omega(1,2:end));
-    w=[waux omega];
-    plot(handles.axes2,w,abs(2*X/length(n)));
+    NFFT = length(janelado);
+    Y = fft(janelado, NFFT);
+    F = ((0:1/NFFT:1-1/NFFT)*fs).'; 
+    
+    magnitude = abs(Y);
     xlabel('$f$(Hz)','interpreter','latex');
-    ylabel('Magnitude');
+    ylabel('Magnitude(dB)');
+    plot(handles.axes2,F,magnitude);
+    
+    fase = unwrap(angle(Y));
+    xlabel('$f$(Hz)','interpreter','latex');
+    ylabel('Radianos');
+    plot(handles.axes3,F,fase);
+    
     
     persistent wvfigh; % Inicializa uma variável persistente
     delete(wvfigh); % Deleta o wvtool anterior se ele for existente
