@@ -171,7 +171,7 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     set(wvfigh, 'Visible', 'off'); % Tira a visibilidade da janela do wvtool
     wvfigax = findall(wvfigh, 'type', 'axes'); % Pega os axes do wvtool
     set(wvfigax, 'Parent', handles.uipanel3); % Coloca os axes do wvtool no nosso painel
-    disp('a')
+    
 %     Omega = -pi:pi/100:6*pi;
 %     for nn = 1:1:length(n)
 %         for O= 1:1:length(Omega)
