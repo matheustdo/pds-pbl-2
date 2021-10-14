@@ -148,16 +148,17 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     
     NFFT = length(janelado);
     Y = fft(janelado, NFFT);
+    Ydb = 20*log10(abs(Y));
     F = ((0:1/NFFT:1-1/NFFT)*fs).'; 
     
-    magnitude = abs(Y);
+    magnitude = Ydb;
     xlabel('$f$(Hz)','interpreter','latex');
     ylabel('Magnitude(dB)');
     plot(handles.axes2,F,magnitude);
     
     fase = unwrap(angle(Y));
     xlabel('$f$(Hz)','interpreter','latex');
-    ylabel('Radianos');
+    ylabel('Fase(radianos)');
     plot(handles.axes3,F,fase);
     
     
