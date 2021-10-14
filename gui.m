@@ -164,11 +164,14 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     
     persistent wvfigh; % Inicializa uma variável persistente
     delete(wvfigh); % Deleta o wvtool anterior se ele for existente
+    oldAxes = findall(handles.uipanel3, 'type', 'axes') % Deleta o wv anterior caso o persistent tenha se perdido
+    delete(oldAxes); % Deleta o wv anterior caso o persistent tenha se perdido
+    
     wvfigh = wvtool(janela); % Cria a janela com o wvtool
     set(wvfigh, 'Visible', 'off'); % Tira a visibilidade da janela do wvtool
     wvfigax = findall(wvfigh, 'type', 'axes'); % Pega os axes do wvtool
     set(wvfigax, 'Parent', handles.uipanel3); % Coloca os axes do wvtool no nosso painel
-    
+    disp('a')
 %     Omega = -pi:pi/100:6*pi;
 %     for nn = 1:1:length(n)
 %         for O= 1:1:length(Omega)
