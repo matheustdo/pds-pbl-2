@@ -145,6 +145,9 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     janelado = h_n.*janela;
     
     stem(handles.axes1, n, janelado);
+    axes(handles.axes1);
+    xlabel(handles.axes1,'$n$(amostra)','interpreter','latex');
+    ylabel(handles.axes1,'Amplitude');
     
     NFFT = length(janelado);
     Y = fft(janelado, NFFT);
@@ -152,21 +155,23 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     F = ((0:1/NFFT:1-1/NFFT)*fs).'; 
     
     magnitude = Ydb;
-    xlabel('$f$(Hz)','interpreter','latex');
-    ylabel('Magnitude(dB)');
     plot(handles.axes2,F,magnitude);
+    axes(handles.axes2);
+    xlabel(handles.axes2,'$f$(Hz)','interpreter','latex');
+    ylabel(handles.axes2,'Magnitude(dB)');
+    handles.axes2.XLim = [0 (fs/2)];
+    
     
     fase = unwrap(angle(Y));
-    xlabel('$f$(Hz)','interpreter','latex');
-    ylabel('Fase(radianos)');
     plot(handles.axes3,F,fase);
-    
+    axes(handles.axes3);
+    xlabel(handles.axes3,'$f$(Hz)','interpreter','latex');
+    ylabel(handles.axes3,'Fase(radianos)');
     
     persistent wvfigh; % Inicializa uma variável persistente
     delete(wvfigh); % Deleta o wvtool anterior se ele for existente
-    oldAxes = findall(handles.uipanel3, 'type', 'axes') % Deleta o wv anterior caso o persistent tenha se perdido
+    oldAxes = findall(handles.uipanel3, 'type', 'axes'); % Deleta o wv anterior caso o persistent tenha se perdido
     delete(oldAxes); % Deleta o wv anterior caso o persistent tenha se perdido
-    
     wvfigh = wvtool(janela); % Cria a janela com o wvtool
     set(wvfigh, 'Visible', 'off'); % Tira a visibilidade da janela do wvtool
     wvfigax = findall(wvfigh, 'type', 'axes'); % Pega os axes do wvtool
