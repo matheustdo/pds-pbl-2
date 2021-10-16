@@ -1,3 +1,9 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%TEC430-PDS-UEFS2021.2
+%Problema 02 
+%Programa para o projeto de filtros FIR através
+%do janelamento de sinc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function varargout = gui(varargin)
 % GUI MATLAB code for gui.fig
 %      GUI, by itself, creates a new GUI or raises the existing
@@ -144,11 +150,14 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     
     janelado = h_n.*janela;
     
+    %% Plotagem dos Coeficientes
     stem(handles.axes1, n, janelado);
     axes(handles.axes1);
     xlabel(handles.axes1,'$n$(amostra)','interpreter','latex');
     ylabel(handles.axes1,'Amplitude');
+    handles.axes1.XLim = [0 M];
     
+    %% Plotagem da Magnitude
     NFFT = length(janelado);
     Y = fft(janelado, NFFT);
     Ydb = 20*log10(abs(Y));
@@ -161,13 +170,56 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     ylabel(handles.axes2,'Magnitude(dB)');
     handles.axes2.XLim = [0 (fs/2)];
     
-    
+    %% Plotagem da Fase
     fase = unwrap(angle(Y));
     plot(handles.axes3,F,fase);
     axes(handles.axes3);
     xlabel(handles.axes3,'$f$(Hz)','interpreter','latex');
     ylabel(handles.axes3,'Fase(radianos)');
     
+    
+    %% Teste do filtro projetado com um sinal de entrada
+%     [xt,fc,phi,t] = sinal(2,10,3000);
+%     sinal_filtrado = conv(janelado, xt);
+%     
+%     Fs = fs;
+%     
+%     figure(1);
+%     subplot(2,1,1);
+%     y=fft(xt); grid on;
+%     yaux=fliplr(y(1,2:end));
+%     X=[yaux y];
+%     X(1,1:length(X)/4)=0;
+%     X(1,3*length(X)/4:end)=0;
+%     length(X);
+%     omega=0:Fs/length(y):Fs-(Fs/length(y));
+%     waux=-fliplr(omega(1,2:end));
+%     w=[waux omega];
+%     length(w);
+%     plot(w,abs(2*X/length(t)));
+%     xlabel('$f$(Hz)','interpreter','latex');
+%     ylabel('Magnitude (|X(j2\pi f)|)');
+%     title('Sinal de Entrada','interpreter','latex');
+%     axis([-4000 4000 -inf inf]);
+%     
+%     subplot(2,1,2);  
+%     y=fft(sinal_filtrado); grid on;
+%     yaux=fliplr(y(1,2:end));
+%     X=[yaux y];
+%     X(1,1:length(X)/4)=0;
+%     X(1,3*length(X)/4:end)=0;
+%     length(X);
+%     omega=0:Fs/length(y):Fs-(Fs/length(y));
+%     waux=-fliplr(omega(1,2:end));
+%     w=[waux omega];
+%     length(w);
+%     plot(w,abs(2*X/length(t)));
+%     xlabel('$f$(Hz)','interpreter','latex');
+%     ylabel('Magnitude (|X(j2\pi f)|)');
+%     title('Sinal Filtrado','interpreter','latex');
+%     axis([-4000 4000 -inf inf]);
+    
+    %% Plotagem da Janela
     persistent wvfigh; % Inicializa uma variável persistente
     delete(wvfigh); % Deleta o wvtool anterior se ele for existente
     oldAxes = findall(handles.uipanel3, 'type', 'axes'); % Deleta o wv anterior caso o persistent tenha se perdido
@@ -176,17 +228,10 @@ function pushbuttonExecutar_Callback(hObject, eventdata, handles)
     set(wvfigh, 'Visible', 'off'); % Tira a visibilidade da janela do wvtool
     wvfigax = findall(wvfigh, 'type', 'axes'); % Pega os axes do wvtool
     set(wvfigax, 'Parent', handles.uipanel3); % Coloca os axes do wvtool no nosso painel
+   
     
-%     Omega = -pi:pi/100:6*pi;
-%     for nn = 1:1:length(n)
-%         for O= 1:1:length(Omega)
-%             XOmega(nn,O)=janelado(nn)*exp(-j*Omega(O)*n(nn));
-%         end
-%     end
-%     for W=1:1:length(Omega)
-%         XOMEGA(W)=sum(XOmega(:,W));
-%     end
-%     plot(handles.axes3,W,XOMEGA);
+    
+    
     
     
   
